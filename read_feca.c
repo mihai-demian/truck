@@ -16,10 +16,9 @@
 
 int main (int argc, char *argv[])
 {
-	unsigned char buf_bam[] = {
-0x41, 0x00, 0x60, 0x09, 0x71, 0xC0, 0x5D,
-0x54, 0xE0, 0x15, 0x20, 0x2F, 0x27, 0x1A,
-0x70, 0x17, 0x80, 0x0C, 0x19, 0xFF, 0xFF,
+	unsigned char buf_bam[] = { /* candump from cluster 18ECFF17#200E0002FFCAFE00 */
+		0xC0, 0xFF, 0x13, 0xF4, 0xA4, 0xFE, 0x44,
+		0x01, 0x24, 0x81, 0x43, 0xF8, 0x64, 0x81,
 	};
 	unsigned char buf[8];
 	int i;
@@ -52,9 +51,6 @@ int main (int argc, char *argv[])
 		unsigned int pgnno;
 	} dm1_bam;
 
-	//sscanf (argv[1], "%2X%2X%2X%2X%2X%2X%2X%2X", &buf[0], &buf[1], &buf[2], &buf[3], &buf[4], &buf[5], &buf[6], &buf[7]);
-	//sscanf (argv[2], "%2X", &cansend.can_addr.j1939.addr);
-
 	cansend_sock = socket (PF_CAN, SOCK_DGRAM, CAN_J1939);
 	setsockopt (cansend_sock, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
 	bind (cansend_sock, (struct sockaddr *) &cansend, sizeof (cansend));
@@ -86,10 +82,10 @@ int main (int argc, char *argv[])
 	dm1.pgn65226.fail.v1 = spns1214_from_spnno_v1 (1208, 3, 10);
 
 	printf ("DEBUG v1: %u\n", spnno_from_spns1214_v1(&dm1.pgn65226.fail.v1));
-	//while (1) {
+	while (1) {
 		sendto (cansend_sock, dm1.bytes, sizeof (dm1.bytes), 0, (struct sockaddr *)&dest, sizeof (dest));
 		//sleep (1);
-		//break;
-	//}
+		break;
+	}
 
 }
